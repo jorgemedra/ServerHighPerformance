@@ -1,0 +1,4 @@
+﻿  Main.cpp
+c:\wp\serverhighperformance\remoteclient\main.cpp(69): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  RemoteClient.vcxproj -> C:\wp\ServerHighPerformance\x64\Debug\RemoteClient.exe
+  RemoteClient.vcxproj -> C:\wp\ServerHighPerformance\x64\Debug\RemoteClient.pdb (Full PDB)

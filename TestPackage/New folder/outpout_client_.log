@@ -1,0 +1,28 @@
+Client arguments: 192.168.90.134:6661
+	Numbers of Messages to Send: 1000
+Client connected to: 192.168.90.134:6661
+
+Tx = 1000; Rx = 1000 Of 1000 Messages. Time (Seconds): 0.09
+Press any key to continue . . . 
+Client Demo has ended.
+Client arguments: 192.168.90.134:6661
+	Numbers of Messages to Send: 10000
+Client connected to: 192.168.90.134:6661
+
+Tx = 10000; Rx = 10000 Of 10000 Messages. Time (Seconds): 0.999
+Press any key to continue . . . 
+Client Demo has ended.
+Client arguments: 192.168.90.134:6661
+	Numbers of Messages to Send: 100000
+Client connected to: 192.168.90.134:6661
+
+Tx = 100000; Rx = 100000 Of 100000 Messages. Time (Seconds): 9.966
+Press any key to continue . . . 
+Client Demo has ended.
+Client arguments: 192.168.90.134:6661
+	Numbers of Messages to Send: 1000000
+Client connected to: 192.168.90.134:6661
+
+Tx = 1000000; Rx = 1000000 Of 1000000 Messages. Time (Seconds): 96.935
+Press any key to continue . . . 
+Client Demo has ended.

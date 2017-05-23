@@ -1,0 +1,1 @@
+ServerHighPerformance.exe 6661 1 >> outpout_server.log

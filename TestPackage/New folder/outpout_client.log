@@ -1,0 +1,111 @@
+Client arguments: 192.168.90.134:6661
+	Numbers of Messages to Send: 1000
+Client connected to: 192.168.90.134:6661
+
+Tx = 1000; Rx = 1000 Of 1000 Messages. Time (Seconds): 0.09
+Press any key to continue . . . 
+Client Demo has ended.
+Client arguments: 192.168.90.134:6661
+	Numbers of Messages to Send: 10000
+Client connected to: 192.168.90.134:6661
+
+Tx = 10000; Rx = 10000 Of 10000 Messages. Time (Seconds): 0.999
+Press any key to continue . . . 
+Client Demo has ended.
+Client arguments: 192.168.90.134:6661
+	Numbers of Messages to Send: 100000
+Client connected to: 192.168.90.134:6661
+
+Tx = 100000; Rx = 100000 Of 100000 Messages. Time (Seconds): 9.966
+Press any key to continue . . . 
+Client Demo has ended.
+Client arguments: 192.168.90.134:6661
+	Numbers of Messages to Send: 1000000
+Client connected to: 192.168.90.134:6661
+
+Tx = 1000000; Rx = 1000000 Of 1000000 Messages. Time (Seconds): 96.935
+Press any key to continue . . . 
+Client Demo has ended.
+
+
+_______________________________
+[Client] RemoteClient.exe Host Port NumMessages bDebug.
+[Client]	If bDebug is 0 Debug is Off, else debug is On 
+[Client]	Arguments: 192.168.90.134:6661
+[Client]	Numbers of Messages to Send: 1
+[Client] 	Debug status: 0
+Client connected to: 192.168.90.134:6661
+
+Tx = 1; Rx = 1 Of 1 Messages. Time (Seconds): 0.006
+Press any key to continue . . . 
+Client Demo has ended.
+[Client] RemoteClient.exe Host Port NumMessages bDebug.
+[Client]	If bDebug is 0 Debug is Off, else debug is On 
+[Client]	Arguments: 192.168.90.134:6661
+[Client]	Numbers of Messages to Send: 10
+[Client] 	Debug status: 0
+Client connected to: 192.168.90.134:6661
+
+Tx = 10; Rx = 10 Of 10 Messages. Time (Seconds): 0.006
+Press any key to continue . . . 
+Client Demo has ended.
+[Client] RemoteClient.exe Host Port NumMessages bDebug.
+[Client]	If bDebug is 0 Debug is Off, else debug is On 
+[Client]	Arguments: 192.168.90.134:6661
+[Client]	Numbers of Messages to Send: 100
+[Client] 	Debug status: 0
+Client connected to: 192.168.90.134:6661
+
+Tx = 100; Rx = 100 Of 100 Messages. Time (Seconds): 0.017
+Press any key to continue . . . 
+Client Demo has ended.
+[Client] RemoteClient.exe Host Port NumMessages bDebug.
+[Client]	If bDebug is 0 Debug is Off, else debug is On 
+[Client]	Arguments: 192.168.90.134:6661
+[Client]	Numbers of Messages to Send: 1000
+[Client] 	Debug status: 0
+Client connected to: 192.168.90.134:6661
+
+Tx = 1000; Rx = 1000 Of 1000 Messages. Time (Seconds): 0.104
+Press any key to continue . . . 
+Client Demo has ended.
+[Client] RemoteClient.exe Host Port NumMessages bDebug.
+[Client]	If bDebug is 0 Debug is Off, else debug is On 
+[Client]	Arguments: 192.168.90.134:6661
+[Client]	Numbers of Messages to Send: 10000
+[Client] 	Debug status: 0
+Client connected to: 192.168.90.134:6661
+
+Tx = 10000; Rx = 10000 Of 10000 Messages. Time (Seconds): 1.011
+Press any key to continue . . . 
+Client Demo has ended.
+[Client] RemoteClient.exe Host Port NumMessages bDebug.
+[Client]	If bDebug is 0 Debug is Off, else debug is On 
+[Client]	Arguments: 192.168.90.134:6661
+[Client]	Numbers of Messages to Send: 10000
+[Client] 	Debug status: 0
+Client connected to: 192.168.90.134:6661
+
+Tx = 10000; Rx = 10000 Of 10000 Messages. Time (Seconds): 0.95
+Press any key to continue . . . 
+Client Demo has ended.
+[Client] RemoteClient.exe Host Port NumMessages bDebug.
+[Client]	If bDebug is 0 Debug is Off, else debug is On 
+[Client]	Arguments: 192.168.90.134:6661
+[Client]	Numbers of Messages to Send: 100000
+[Client] 	Debug status: 0
+Client connected to: 192.168.90.134:6661
+
+Tx = 100000; Rx = 100000 Of 100000 Messages. Time (Seconds): 9.573
+Press any key to continue . . . 
+Client Demo has ended.
+[Client] RemoteClient.exe Host Port NumMessages bDebug.
+[Client]	If bDebug is 0 Debug is Off, else debug is On 
+[Client]	Arguments: 192.168.90.134:6661
+[Client]	Numbers of Messages to Send: 1000000
+[Client] 	Debug status: 0
+Client connected to: 192.168.90.134:6661
+
+Tx = 1000000; Rx = 1000000 Of 1000000 Messages. Time (Seconds): 95.431
+Press any key to continue . . . 
+Client Demo has ended.

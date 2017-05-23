@@ -1,0 +1,16 @@
+﻿  Main.cpp
+  Generating Code...
+  Compiling...
+  Server.cpp
+c:\wp\serverhighperformance\serverhighperformance\server.cpp(89): warning C4309: 'return': truncation of constant value
+c:\wp\serverhighperformance\serverhighperformance\server.cpp(96): warning C4996: 'gethostbyname': Use getaddrinfo() or GetAddrInfoW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(2238): note: see declaration of 'gethostbyname'
+c:\wp\serverhighperformance\serverhighperformance\server.cpp(97): warning C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(1868): note: see declaration of 'inet_ntoa'
+c:\wp\serverhighperformance\serverhighperformance\server.cpp(102): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(1850): note: see declaration of 'inet_addr'
+c:\wp\serverhighperformance\serverhighperformance\server.cpp(149): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+c:\wp\serverhighperformance\serverhighperformance\server.cpp(186): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+  Generating Code...
+  ServerHighPerformance.vcxproj -> C:\wp\ServerHighPerformance\x64\Debug\ServerHighPerformance.exe
+  ServerHighPerformance.vcxproj -> C:\wp\ServerHighPerformance\x64\Debug\ServerHighPerformance.pdb (Full PDB)
