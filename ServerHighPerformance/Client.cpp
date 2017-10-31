@@ -15,18 +15,26 @@ Protocolo definition:
 #include "Client.h"
 #include <iostream>
 #include <string>
+#include <sstream>
 
 using namespace demo;
 using namespace std;
 
-Client::Client(SOCKET s)
-{
-	socket = s;
-	bWaitForHeader = true;
-	dataSizeAwaited = 0;
+#define HEADER_SIZE		1
 
-	debug = false;
-	_closed = false;
+Client::Client(SOCKET s):
+	socket(s),
+	bWaitForHeader(true),
+	bStartToRxData(false),
+	_expectedSize(HEADER_SIZE),
+	_bytesRecived(0),
+	debug(false),
+	_closed(false),
+	bufferIn(0),
+	_txCounter(0),
+	_rxCounter(0)
+{
+	
 }
 
 
@@ -44,83 +52,103 @@ void Client::setDebug(bool bDebug)
 	debug = bDebug;
 }
 
-void Client::reverseBuffer(char* buffer, int size)
+void Client::reverseBuffer()
 {
 	int iL, iR;
 	bool bKeepDoing = true;
 	
-	iL = 0;
-	iR = size - 1;
+	iL = HEADER_SIZE; //Skip the header byte.
+	iR = _expectedSize - 1; //Calcualte the size of data.
+
 	while (bKeepDoing)
 	{	
 		if ((iL == iR) || (iL > iR))
 			bKeepDoing = false;
 		else
 		{
-			char cAux = buffer[iL];
-			buffer[iL] = buffer[iR];
-			buffer[iR] = cAux;
+			char cAux = bufferIn[iL];
+			bufferIn[iL] = bufferIn[iR];
+			bufferIn[iR] = cAux;
 			iL++;
 			iR--;
 		}
 	}//While
 }
 
-bool Client::newDataArrived()
+
+void Client::startToRecAsync()
 {
-	bool bDisconnected = false;
+	bufferIn.clear();	
+	bufferIn.resize(HEADER_SIZE, 0x00);
+	bWaitForHeader = true;
+	_expectedSize = HEADER_SIZE;
+	_bytesRecived = 0;
 
-	if (bWaitForHeader)
-	{
-		if(debug)
-			cout << "Rx:[" << socket << "] Getting Header..." << endl;
-		dataSizeAwaited = getHeaderSize(bDisconnected); //Get the header which has the size of data.
+	if (debug)
+		cout << "Rx:[" << socket << "] Wait for Header..." << endl;
 
-		if (dataSizeAwaited > 0)
-		{
-			if (debug)
-				cout << "Rx:[" << socket << "] The expected Size is 0, the socket will be closed." << endl;
-			bWaitForHeader = false; //Change the status to WaitForData
-		}
-	}
-	else
-	{
-		if (debug)
-			cout << "Rx:[" << socket << "] Getting Data of " << dataSizeAwaited  << "bytes..." << endl;
-
-		int errorCode = 0;
-		int recived = 0;
-		char* buffer = rx(dataSizeAwaited, recived, errorCode, bDisconnected);
-
-		if (buffer != NULL)
-		{
-			if (debug)
-				cout << "Rx:[" << socket << "] - Size:[" << dataSizeAwaited << "], Data[" << string(buffer) << "]" << endl;
-
-			reverseBuffer(buffer, dataSizeAwaited);
-
-			if (debug)
-				cout << "Tx:[" << socket << "] - Size:[" << dataSizeAwaited << "], Data[" << string(buffer) << "]" << endl;
-			
-			char bufferSize[1] = { (char)(0x00ff & dataSizeAwaited) };
-
-			bDisconnected = tx(bufferSize, 1); //Send Header
-			bDisconnected = tx(buffer, dataSizeAwaited); //SendData
-			delete[] buffer;
-		}
-		else
-		{
-			cout << "Rx:[" << socket << "] The expected Buffer is NULL, the socket will be closed." << endl;
-			bDisconnected = true;
-		}
-
-		bWaitForHeader = true;
-		dataSizeAwaited = 0;
-	}
-
-	_closed = bDisconnected;
-	return bDisconnected;
 }
+
+bool Client::readIncommingBytes()
+{
+	int errorCode = 0;
+	bool bConxOpened = false;
+	bool bCompleted = false;
+
+	bConxOpened = rx(errorCode, bCompleted);
+
+	if (!bConxOpened)
+	{
+		cout << "Rx:[" << socket << "] The remote endpoint closed the connection. Error Code: " << errorCode << endl;
+		return false;
+	}
+	else if (bCompleted)
+	{
+		if (bWaitForHeader)
+		{
+			int size = (int)(0x00ff & bufferIn[0]);
+			
+			if (size == 0)
+			{
+				cout << "Rx:[" << socket << "] Header with Data size equal to CERO, the connection will be closed, according to protocol." << endl;
+				return false;
+			}
+			else
+				if (debug)
+					cout << "Rx:[" << socket << "] Header with Data size = " << size << "." << endl;
+
+			_expectedSize += size; //Increase the size of bytes expected.
+			bWaitForHeader = false;
+			bufferIn.resize(_expectedSize); //resize the buffer.
+
+		}
+		else //Data completed.
+		{
+			_rxCounter++;
+			if (debug)
+				cout << "Rx:[" << socket << "] - Data[" << &bufferIn[1] << "]" << endl;
+			
+			int size = (int)(0x00ff & bufferIn[0]);
+			reverseBuffer();
+			bufferIn[0] = (char)(size & 0x00ff);
+
+			if(tx(&bufferIn[0],_expectedSize) == 0)
+				_txCounter++;
+			
+			bWaitForHeader = true;
+			startToRecAsync(); //Reinitialize the reception cycle.
+
+			if (_rxCounter == MAX_COUNTER)
+				_rxCounter = 0;
+			if (_txCounter == MAX_COUNTER)
+				_txCounter = 0;
+		}
+	}
+
+	return bConxOpened;
+
+}
+
 
 int Client::tx(char* buffer, int size)
 {
@@ -141,66 +169,48 @@ int Client::tx(char* buffer, int size)
 	return errCode;
 }
 
-int Client::getHeaderSize(bool &bClosed)
-{
-	int size= 1; //The header has a size of 1 bytes
-	int recived = 0;
-	int errorCode = 0;
 
-	char* buffer = rx(size, recived, errorCode, bClosed);
-
-	if (errorCode == 0 && !bClosed && recived > 0)
-	{
-		size = (int)(0x00ff & buffer[0]);
-		delete buffer;
-	}
-	else
-		size = 0;
-
-	return size;
-}
-
-char* Client::rx(int size, int &recived, int &errorCode, bool &bClosed)
+/**
+* errorCode: Output parameter to indicated if there was an error to read the buffer.
+* bCompleated: Output parameter to indicated if has been readed all the expected bytes.
+* this method Return: 
+* True if the reception was successful, false if the connection was closed.
+*/
+bool Client::rx(int &errorCode, bool &bCompleated)
 {	
-	char* buffer = NULL;
-	int bytesRecived = 0;
 	int missingBytes = 0;
 
-	recived = 0;
-	if (size <= 0)
+	missingBytes = _expectedSize - _bytesRecived;
+
+	if (missingBytes <= 0)
 	{
-		cout << "RxId[" << socket << "] - Its not possible wait for 0 bytes or less in Socket Reception process. Excpected Ammount:[" << size << "]" << endl;
+		cout << "RxId[" << socket << "] - Its not possible wait for 0 bytes or less in Socket Reception process. Excpected Ammount:[" << missingBytes << "]" << endl;
 		errorCode = -1;
-		return NULL;
+		return true;
 	}
 
-	buffer = new char[size + 1];
-	memset(buffer, '\0', size + 1);
+	int recived = recv(socket, &bufferIn[_bytesRecived], missingBytes, 0);
 
-	missingBytes = size - bytesRecived;
-
-	while (missingBytes > 0)
+	if (recived <= 0)
 	{
-		int recived = recv(socket, (char*)(buffer + bytesRecived), missingBytes, 0);
-
-		if (recived <= 0)
-		{
-			errorCode = WSAGetLastError();
-			bClosed = true;
-
-			if (buffer != NULL)
-				delete[] buffer;
-
-			return NULL;
-		}
-
-		bytesRecived = bytesRecived + recived;
-		missingBytes = size - bytesRecived;
+		errorCode = WSAGetLastError();
+		bCompleated = false;
+		bufferIn.clear();
+		return false;
 	}
 
-	recived = bytesRecived;
-	return (char*)buffer;
+	_bytesRecived = _bytesRecived + recived;
+
+	if (_bytesRecived == _expectedSize)
+		bCompleated = true;
+
+	return true;
 }
 
 
-
+string Client::getStatistics()
+{
+	stringstream out;
+	out << "Rx: " << _rxCounter << " - Tx: " << _txCounter;
+	return out.str();
+}

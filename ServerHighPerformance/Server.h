@@ -24,6 +24,7 @@ namespace demo
 		SOCKET server;
 		map<SOCKET, Client*> m_sockets;
 		std::string _srvHostName;
+		int _maxConnectedClients;
 
 		int initSocketServer();
 

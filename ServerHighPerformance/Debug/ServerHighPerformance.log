@@ -1,13 +1,10 @@
-﻿  Main.cpp
-  Generating Code...
-  Compiling...
-  Server.cpp
-c:\wp\serverhighperformance\serverhighperformance\server.cpp(96): warning C4996: 'gethostbyname': Use getaddrinfo() or GetAddrInfoW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+﻿  Server.cpp
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(100): warning C4996: 'gethostbyname': Use getaddrinfo() or GetAddrInfoW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
   c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(2238): note: see declaration of 'gethostbyname'
-c:\wp\serverhighperformance\serverhighperformance\server.cpp(97): warning C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(101): warning C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
   c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(1868): note: see declaration of 'inet_ntoa'
-c:\wp\serverhighperformance\serverhighperformance\server.cpp(102): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(106): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
   c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(1850): note: see declaration of 'inet_addr'
-  Generating Code...
-  ServerHighPerformance.vcxproj -> C:\wp\ServerHighPerformance\Debug\ServerHighPerformance.exe
-  ServerHighPerformance.vcxproj -> C:\wp\ServerHighPerformance\Debug\ServerHighPerformance.pdb (Full PDB)
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(249): warning C4018: '<': signed/unsigned mismatch
+  ServerHighPerformance.vcxproj -> \\vmware-host\Shared Folders\jorgeomarmedratorres\Documents\JOMT\GitHub\ServerHP\Debug\ServerHighPerformance.exe
+  ServerHighPerformance.vcxproj -> \\vmware-host\Shared Folders\jorgeomarmedratorres\Documents\JOMT\GitHub\ServerHP\Debug\ServerHighPerformance.pdb (Full PDB)

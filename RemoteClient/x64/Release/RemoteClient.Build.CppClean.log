@@ -1,13 +1,14 @@
 c:\wp\serverhighperformance\remoteclient\x64\release\vc140.pdb
-c:\wp\serverhighperformance\remoteclient\x64\release\main.obj
-c:\wp\serverhighperformance\remoteclient\x64\release\client.obj
-c:\wp\serverhighperformance\x64\release\remoteclient.exe
-c:\wp\serverhighperformance\x64\release\remoteclient.ipdb
-c:\wp\serverhighperformance\x64\release\remoteclient.iobj
-c:\wp\serverhighperformance\x64\release\remoteclient.pdb
-c:\wp\serverhighperformance\remoteclient\x64\release\remoteclient.tlog\cl.command.1.tlog
-c:\wp\serverhighperformance\remoteclient\x64\release\remoteclient.tlog\cl.read.1.tlog
-c:\wp\serverhighperformance\remoteclient\x64\release\remoteclient.tlog\cl.write.1.tlog
-c:\wp\serverhighperformance\remoteclient\x64\release\remoteclient.tlog\link.command.1.tlog
-c:\wp\serverhighperformance\remoteclient\x64\release\remoteclient.tlog\link.read.1.tlog
-c:\wp\serverhighperformance\remoteclient\x64\release\remoteclient.tlog\link.write.1.tlog
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\x64\release\vc140.pdb
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\x64\release\main.obj
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\x64\release\client.obj
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\x64\release\remoteclient.exe
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\x64\release\remoteclient.ipdb
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\x64\release\remoteclient.iobj
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\x64\release\remoteclient.pdb
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\x64\release\remoteclient.tlog\cl.command.1.tlog
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\x64\release\remoteclient.tlog\cl.read.1.tlog
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\x64\release\remoteclient.tlog\cl.write.1.tlog
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\x64\release\remoteclient.tlog\link.command.1.tlog
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\x64\release\remoteclient.tlog\link.read.1.tlog
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\x64\release\remoteclient.tlog\link.write.1.tlog

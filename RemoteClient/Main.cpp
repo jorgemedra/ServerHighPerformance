@@ -3,6 +3,7 @@
 #include <sstream>
 #include <ctime>
 #include <fstream>
+#include <future>
 
 using namespace std;
 using namespace demo_clt;
@@ -19,13 +20,19 @@ void writeResult(string data)
 	
 }
 
-
-
+bool bRunning;
+void keepRunning()
+{
+	system("PAUSE");
+	bRunning = false;
+}
 
 int main(int argsc, char* args[])
 {
 	clock_t t_Pbegin, t_Pend;
 	clock_t t_begin, t_end;
+	
+	bRunning = true;
 
 	t_Pbegin = clock(); //Start Transmitions
 
@@ -59,9 +66,14 @@ int main(int argsc, char* args[])
 		cout << "Client connected to: " << host << ":" << port << endl;
 		int tx = 0, rx = 0;
 
+
+		auto handler = std::async(keepRunning);
+
 		t_begin = clock(); //Start Transmitions
 
-		for (int i = 0; i < messages; i++)
+		//for (int i = 0; i < messages; i++)
+		int i = 0;
+		while(bRunning)
 		{
 			std::stringstream out;
 			int size = 0;
@@ -92,7 +104,9 @@ int main(int argsc, char* args[])
 			else
 				break;
 
-		} //for
+			//Sleep(10);
+
+		} //while
 
 
 		t_end = clock(); //End Transmitions
@@ -117,8 +131,8 @@ int main(int argsc, char* args[])
 	}
 	delete c;
 	
-	if(debug)
-		system("PAUSE");
+	//if(debug)
+	//	system("PAUSE");
 
 
 	cout << "Client Demo has ended." << endl;

@@ -3,18 +3,22 @@
 #include "Client.h"
 #include <queue>
 #include <iostream>
+#include <sstream>
 #include <functional>
 #include <future>
 
 using namespace demo;
+using namespace std;
 
-Server::Server()
+Server::Server():
+	bStarted(false),
+	bKeepRunning(false),
+	_port(0),
+	p_thread(NULL),
+	debug(false),
+	_maxConnectedClients(0)
 {
-	bStarted = false;
-	bKeepRunning = false;
-	this->_port = 0;
-	p_thread = NULL;
-	debug = false;
+	
 }
 
 Server::~Server()
@@ -143,8 +147,8 @@ int Server::Run(int port)
 
 	cout << endl << "Native Port stablished on port: " << _port << endl;
 	
-	u_long iModeServer = 0;
-	ioctlsocket(server, FIONBIO, &iModeServer); //Set Non-Blocking the socket server. 
+	u_long iModeServer = 1; // 1 = Non-Blocking / 0 = Blocking.
+	ioctlsocket(server, FIONBIO, &iModeServer); //Set Non-Blocking the socket server option. 
 
 	max_sd = server;
 
@@ -185,14 +189,11 @@ int Server::Run(int port)
 			if (s > 0)
 				max_sd = s; //New Selector.
 
-			//bool reuseadd = true;
-			bool keepAlive = true;
-			u_long iMode = 1;
-
-			//setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (const char*)&reuseadd, sizeof(bool)); // Allows the socket to be bound to an address that is already in use
-			setsockopt(s, SOL_SOCKET, SO_KEEPALIVE, (const char*)&keepAlive, sizeof(bool)); // Enable keep-alive packets for a socket connection
-			 
-			int iResult = ioctlsocket(s, FIONBIO, &iMode); //Set Non-Blocking the socket.
+			//-- This code was commented because all incomming onnection inheret the Non-Blocking from Socket Server. --// 
+			//u_long iMode = 1; // 1 = Non-Blocking / 0 = Blocking.
+			//setsockopt(s, SOL_SOCKET, SO_KEEPALIVE, (const char*)&keepAlive, sizeof(bool)); // Enable keep-alive packets for a socket connection
+			//int iResult = ioctlsocket(s, FIONBIO, &iMode); //Set Non-Blocking the socket.
+			//---------------------------------------------------------------------------------------------------------//
 
 			connectionRequest(s); //Report New Connection Event
 		} // Server
@@ -204,14 +205,14 @@ int Server::Run(int port)
 			SOCKET s = it->first;
 			Client* c = it->second;
 
-			bool bCloseSock = false;
+			bool bConnOpenned = false;
 
 			if (FD_ISSET(s, &rd_fd))
 			{
 				//Report Data Available, after read Data continue with the other socket.
-				bCloseSock = newDataAvailabe(s); //If return False, the socket has been closed.
+				bConnOpenned = newDataAvailabe(s); //If return False, the socket has been closed.
 				
-				if (bCloseSock)
+				if (!bConnOpenned)
 					qClosed.push(s);
 			}
 			else if (FD_ISSET(s, &ex_fd))
@@ -226,8 +227,8 @@ int Server::Run(int port)
 			SOCKET s = qClosed.front();
 			
 			qClosed.pop();
-			m_sockets.erase(s);
 			connectionClose(s); //report Close event
+			m_sockets.erase(s);
 		}
 
 
@@ -235,35 +236,46 @@ int Server::Run(int port)
 
 	serverStoped();
 
+	cout << "The server has been stoped and it has handled at " << _maxConnectedClients << " connected clients." << endl;
+	system("PAUSE");
 	return 0;
 }
 
 void Server::connectionRequest(SOCKET s)
 {
 	m_sockets[s] = new Client(s);
+	m_sockets[s]->setDebug(debug);
+	m_sockets[s]->startToRecAsync();
+	if (_maxConnectedClients < m_sockets.size())
+		_maxConnectedClients = m_sockets.size();
+
 	cout << "Connection client accepted with Socket ID" << (unsigned int)s << endl;
+	cout << "Connected Clients: " << m_sockets.size() << endl;
 }
 
  bool Server::newDataAvailabe(SOCKET s)
 {
-	 bool bClosed = false;
+	 bool bConnOpenned = false;
 	map<SOCKET, Client*>::iterator it = m_sockets.find(s);
 	if (it != m_sockets.end())
 	{
 		Client* c = m_sockets[s];
-		bClosed = c->newDataArrived(); //Process the incomming message and response it.
+		bConnOpenned = c->readIncommingBytes(); //Process the incomming message and response it.
 	}
 
-	return bClosed;
+	return bConnOpenned;
 }
 
 void Server::connectionClose(SOCKET s)
 {
-	cout << "Connection client " << (unsigned int)s << " closed" << endl;
-
+	string stats;
+	
 	if (m_sockets.find(s) != m_sockets.end())
 	{
 		Client* c = m_sockets[s];
+		cout << "Connection client " << (unsigned int)s << " closed with: " << c->getStatistics() << endl;
+		cout << "Remain Clients: " << m_sockets.size() << endl;
+
 		closesocket(s); //release the socket into the server.
 		if (c != NULL)
 			delete c;
