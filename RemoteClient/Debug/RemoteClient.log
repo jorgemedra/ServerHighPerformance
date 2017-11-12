@@ -1,3 +1,17 @@
 ﻿  Main.cpp
+  Client.cpp
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\client.cpp(67): warning C4996: 'gethostbyname': Use getaddrinfo() or GetAddrInfoW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(2238): note: see declaration of 'gethostbyname'
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\client.cpp(71): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(1850): note: see declaration of 'inet_addr'
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\client.cpp(72): warning C4996: 'gethostbyaddr': Use getnameinfo() or GetNameInfoW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(2216): note: see declaration of 'gethostbyaddr'
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\client.cpp(85): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\client.cpp(89): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(1850): note: see declaration of 'inet_addr'
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\client.cpp(24): warning C4101: 'lclHost': unreferenced local variable
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\remoteclient\client.cpp(256): warning C4305: 'return': truncation from 'int' to 'bool'
+  Generating Code...
   RemoteClient.vcxproj -> \\vmware-host\Shared Folders\jorgeomarmedratorres\Documents\JOMT\GitHub\ServerHP\Debug\RemoteClient.exe
   RemoteClient.vcxproj -> \\vmware-host\Shared Folders\jorgeomarmedratorres\Documents\JOMT\GitHub\ServerHP\Debug\RemoteClient.pdb (Full PDB)

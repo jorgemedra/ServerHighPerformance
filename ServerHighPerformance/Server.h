@@ -34,6 +34,7 @@ namespace demo
 		void connectionRequest(SOCKET s);
 		bool newDataAvailabe(SOCKET s);
 		void connectionClose(SOCKET s);
+		void timeOutRx();
 		void serverStoped();
 
 	public:

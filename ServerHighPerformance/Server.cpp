@@ -164,64 +164,95 @@ int Server::Run(int port)
 
 		map<SOCKET, Client*>::iterator it;
 
-		for (it = m_sockets.begin(); it != m_sockets.end(); it++)
+		for (it = m_sockets.begin(); it != m_sockets.end(); it++) //Big-O(n): n = number of socket connected + socket Server
 		{
 			SOCKET sk = it->first;
 			FD_SET(sk, &rd_fd); //Add all the Sockets Clients that are connected to server.
-			FD_SET(sk, &ex_fd);
+			//FD_SET(sk, &ex_fd);
 		}
 
-		int result = select(max_sd, &rd_fd, NULL, &ex_fd, NULL);	//Wait for an event of Reading or Exception
+		timeval tout;
+		tout.tv_sec = 60; //Wait for 5 second to receive data.
+		tout.tv_usec = 0;
 
-		if (result < 0)
+		int totalEvents = select(max_sd, &rd_fd, NULL, NULL, &tout);	//Wait for an event of Reading or Exception
+
+		if (totalEvents < 0)
 		{
-			cout << "There was a problem with the sockets reading." << endl;
-			FD_ZERO(&rd_fd);
-			FD_ZERO(&ex_fd);
-		}
+			char error_code;
+			int err_r;
+			int error_code_size = sizeof(error_code);
+			int lerr = WSAGetLastError();
 
-		int ss = WSAGetLastError();
-
-		if (FD_ISSET(server, &rd_fd) && bKeepRunning)
-		{
-			SOCKET s = accept(server, NULL, NULL);
-
-			if (s > 0)
-				max_sd = s; //New Selector.
-
-			//-- This code was commented because all incomming onnection inheret the Non-Blocking from Socket Server. --// 
-			//u_long iMode = 1; // 1 = Non-Blocking / 0 = Blocking.
-			//setsockopt(s, SOL_SOCKET, SO_KEEPALIVE, (const char*)&keepAlive, sizeof(bool)); // Enable keep-alive packets for a socket connection
-			//int iResult = ioctlsocket(s, FIONBIO, &iMode); //Set Non-Blocking the socket.
-			//---------------------------------------------------------------------------------------------------------//
-
-			connectionRequest(s); //Report New Connection Event
-		} // Server
-
-		  //-------------------------------
-		  //Check For Clients Events.
-		for (it = m_sockets.begin(); it != m_sockets.end(); it++)
-		{
-			SOCKET s = it->first;
-			Client* c = it->second;
-
-			bool bConnOpenned = false;
-
-			if (FD_ISSET(s, &rd_fd))
+			cout << "There was a problem with the sockets reading. Select Result, WSAGetLastError: " << lerr << endl;
+			
+			err_r = getsockopt(server, SOL_SOCKET, SO_ERROR, &error_code, &error_code_size);
+			if (error_code == SOCKET_ERROR)
 			{
-				//Report Data Available, after read Data continue with the other socket.
-				bConnOpenned = newDataAvailabe(s); //If return False, the socket has been closed.
-				
-				if (!bConnOpenned)
-					qClosed.push(s);
+				lerr = WSAGetLastError();
+
+				cout << "The Socket Server has a problem. Err Code: " << (int)(error_code & 0x00ff)
+					<< ", WSAGetLastError: " << dec << lerr;
 			}
-			else if (FD_ISSET(s, &ex_fd))
-				qClosed.push(s);
 
-		}//for Clients
+			//Since V1.16 Look for the socket client that has been thrown an error and remove it
+			for (it = m_sockets.begin(); it != m_sockets.end(); it++)
+			{
+				SOCKET sk = it->first;
 
-		 //--------------------------------------------------------
-		 //Remove sockets that are closed and report the event.
+				err_r = getsockopt(sk, SOL_SOCKET, SO_ERROR, &error_code, &error_code_size);
+
+				if (err_r == SOCKET_ERROR)
+				{
+					qClosed.push(sk);
+
+					lerr = WSAGetLastError();
+
+					cout << "The Socket [" << sk << "] has a problem. Err Code: " << (int)(error_code & 0x00ff)
+						<< ", WSAGetLastError: " << dec << lerr << endl;
+				}
+
+			}//for Clients
+
+		}
+		else if(totalEvents == 0) //TIME OUT TO RECEIVE
+		{
+			cout << "There is no Socket To Report." << endl;
+			FD_ZERO(&rd_fd);
+			timeOutRx();
+		}
+		else
+		{
+			int sktEv = 0;
+			//-------------------------------
+			//Check For Clients Events.
+			for(sktEv =0; sktEv < totalEvents; sktEv++) // Big-O(k) where K = Number of Socket which triger an action reading
+			{
+				SOCKET s = rd_fd.fd_array[sktEv];
+				if (s == server) //FD_ISSET(server, &rd_fd) && bKeepRunning)
+				{
+					SOCKET s = accept(server, NULL, NULL);
+
+					if (s > 0)
+						max_sd = s; //New Selector.
+					connectionRequest(s); //Report New Connection Event
+				} // Server
+				else
+				{
+					bool bConnOpenned = false;
+
+					//Report Data Available, after read Data continue with the other socket.
+					bConnOpenned = newDataAvailabe(s); //If return False, the socket has been closed.
+
+					if (!bConnOpenned)
+						qClosed.push(s);
+				}
+			} //For
+			
+		} //else
+
+		//--------------------------------------------------------
+		//Remove sockets that are closed and report the event.
 		while (qClosed.size() > 0)
 		{
 			SOCKET s = qClosed.front();
@@ -230,8 +261,6 @@ int Server::Run(int port)
 			connectionClose(s); //report Close event
 			m_sockets.erase(s);
 		}
-
-
 	} //while
 
 	serverStoped();
@@ -243,19 +272,37 @@ int Server::Run(int port)
 
 void Server::connectionRequest(SOCKET s)
 {
-	m_sockets[s] = new Client(s);
-	m_sockets[s]->setDebug(debug);
-	m_sockets[s]->startToRecAsync();
-	if (_maxConnectedClients < m_sockets.size())
-		_maxConnectedClients = m_sockets.size();
+	int lerr = WSAGetLastError();
+	if (lerr == 0)
+	{
+		m_sockets[s] = new Client(s);
+		m_sockets[s]->setDebug(debug);
+		m_sockets[s]->startToRecAsync();
+		if (_maxConnectedClients < m_sockets.size())
+			_maxConnectedClients = m_sockets.size();
 
-	cout << "Connection client accepted with Socket ID" << (unsigned int)s << endl;
-	cout << "Connected Clients: " << m_sockets.size() << endl;
+		cout << "Connection client accepted with Socket ID: " << (unsigned int)s << " ERROR: " << lerr << endl;
+		cout << "Connected Clients: " << m_sockets.size() << endl;
+	}
+	else
+	{
+		/*
+		WSAEWOULDBLOCK = 10035
+		Resource temporarily unavailable.
+		This error is returned from operations on nonblocking sockets that cannot be completed 
+		immediately, for example recv when no data is queued to be read from the socket. It is a 
+		nonfatal error, and the operation should be retried later. It is normal for WSAEWOULDBLOCK
+		to be reported as the result from calling connect on a nonblocking SOCK_STREAM socket, since
+		some time must elapse for the connection to be established.
+		*/
+		if(lerr != 10035)
+			cout << "Connection client request with error: " << lerr << endl;
+	}
 }
 
  bool Server::newDataAvailabe(SOCKET s)
 {
-	 bool bConnOpenned = false;
+	bool bConnOpenned = false;
 	map<SOCKET, Client*>::iterator it = m_sockets.find(s);
 	if (it != m_sockets.end())
 	{
@@ -266,6 +313,26 @@ void Server::connectionRequest(SOCKET s)
 	return bConnOpenned;
 }
 
+void Server::timeOutRx()
+{
+	string stats;
+	map<SOCKET, Client*>::iterator its;
+
+	while(!m_sockets.empty())
+	{
+		its = m_sockets.begin();
+		
+		Client* c = its->second;
+		SOCKET s = its->first;
+
+		m_sockets.erase(s);
+		cout << "Closing client " << (unsigned int)s << " By TimeOut" << endl;
+		closesocket(s); //release the socket into the server.
+		if (c != NULL)
+			delete c;
+	}
+}
+
 void Server::connectionClose(SOCKET s)
 {
 	string stats;
@@ -273,6 +340,7 @@ void Server::connectionClose(SOCKET s)
 	if (m_sockets.find(s) != m_sockets.end())
 	{
 		Client* c = m_sockets[s];
+		m_sockets.erase(s);
 		cout << "Connection client " << (unsigned int)s << " closed with: " << c->getStatistics() << endl;
 		cout << "Remain Clients: " << m_sockets.size() << endl;
 
@@ -280,7 +348,7 @@ void Server::connectionClose(SOCKET s)
 		if (c != NULL)
 			delete c;
 	}
-	closesocket(s);
+	//closesocket(s);
 }
 
 void Server::serverStoped()

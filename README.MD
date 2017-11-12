@@ -14,95 +14,47 @@ This sample has:
 The main consideration of **ServerHighPerformance** is avoid the using of thread and sleeps to attend each remote connection. Instead of **ServerHighPerformance** use a single thread to monitoring each connection request and the reading status of each remote connection's socket. To monitoring the **ServerHighPerformance** use File Descriptors and `select` function, to wait until an event has happened.
 
 
-``` C++
-int Server::Run(int port)
-{
-	int err = 0;
-	int max_sd = 0;
-	fd_set rd_fd;
-	fd_set ex_fd;
-	queue<SOCKET> qClosed;
+```Matlab
 
-  //...
+% Initialize Socket Server server.
+% Initialize skt_m map.
+% Initialize qClosed queue.
+% Add server to rd_fd.
+% tout = X;
 
-	while (bKeepRunning)
-	{
-    //...
-		FD_ZERO(&rd_fd);
-		FD_ZERO(&ex_fd);
+while Service is Running
 
-		FD_SET(server, &rd_fd);
-		FD_SET(server, &ex_fd);
+	% Add all socket of server and skt_m to rd_fd. This step has a runtime of O(n).
 
-		map<SOCKET, Client*>::iterator it;
+	% Wait for an event of Request connection o Data ready for read.
+	% k = select(dummy, &rd_fd, NULL, NULL, NULL, &tout);
 
-		for (it = m_sockets.begin(); it != m_sockets.end(); it++)
-		{
-			SOCKET sk = it->first;
-			FD_SET(sk, &rd_fd); //Add all the Sockets Clients that are connected to server.
-			FD_SET(sk, &ex_fd);
-		}
+	if k < 0
+		% Find the sockets that trigger an error on select and add them to qClosed.
+	elseif k == 0
+		% Timeout detected, it’s depend of each requirement to know how to handle each time out it happens.
+	else
 
-		int result = select(max_sd, &rd_fd, NULL, &ex_fd, NULL);	//Wait for an event of Reading or Exception
+		% For each socket s that raise an event on rd_fd to accept an Connection Request
+		% or read data. This step has a runtime of O(k).
+		for i=0 to k-1
+			s = rd_fd(i);
+			if s == server
+				% Accept socket and add it to skt_m.
+			else			
+				% Read data from socket s.
+				% If socket s trigger an error to read, then close the socket
+				% adding it to qClosed.
+			end
+		end
+	end
 
-		if (result < 0)
-		{
-			cout << "There was a problem with the sockets reading." << endl;
-			FD_ZERO(&rd_fd);
-			FD_ZERO(&ex_fd);
-		}
+	while qClosed is not empty.
+		sc = Pop from qClosed.
+		% Close sc.
+	end
+end
 
-		int ss = WSAGetLastError();
-
-		if (FD_ISSET(server, &rd_fd) && bKeepRunning)
-		{
-			SOCKET s = accept(server, NULL, NULL);
-
-			//...
-
-			connectionRequest(s); //Report New Connection Event
-		} // Server
-
-		  //-------------------------------
-		  //Check For Clients Events.
-		for (it = m_sockets.begin(); it != m_sockets.end(); it++)
-		{
-			SOCKET s = it->first;
-			Client* c = it->second;
-
-			bool bCloseSock = false;
-
-			if (FD_ISSET(s, &rd_fd))
-			{
-				//Report Data Available, after read Data continue with the other socket.
-				bCloseSock = newDataAvailabe(s); //If return False, the socket has been closed.
-
-				if (bCloseSock)
-					qClosed.push(s);
-			}
-			else if (FD_ISSET(s, &ex_fd))
-				qClosed.push(s);
-
-		}//for Clients
-
-		 //--------------------------------------------------------
-		 //Remove sockets that are closed and report the event.
-		while (qClosed.size() > 0)
-		{
-			SOCKET s = qClosed.front();
-
-			qClosed.pop();
-			m_sockets.erase(s);
-			connectionClose(s); //report Close event
-		}
-
-
-	} //while
-
-	serverStoped();
-
-	return 0;
-}
 ```
 
  Mean while the **RemoteClient** is connected to the **ServerHighPerformance** to send 1000 message. Each message that is sended by **RemoteClient** needs to be answered by the **ServerHighPerformance** before to send the next message in queue.

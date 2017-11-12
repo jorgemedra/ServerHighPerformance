@@ -7,7 +7,7 @@
 \\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(106): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
   c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(1850): note: see declaration of 'inet_addr'
 \\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(153): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
-\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(190): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
-\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(250): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(237): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(282): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
   ServerHighPerformance.vcxproj -> \\vmware-host\Shared Folders\jorgeomarmedratorres\Documents\JOMT\GitHub\ServerHP\x64\Debug\ServerHighPerformance.exe
   ServerHighPerformance.vcxproj -> \\vmware-host\Shared Folders\jorgeomarmedratorres\Documents\JOMT\GitHub\ServerHP\x64\Debug\ServerHighPerformance.pdb (Full PDB)

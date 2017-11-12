@@ -5,6 +5,6 @@
   c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(1868): note: see declaration of 'inet_ntoa'
 \\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(106): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
   c:\program files (x86)\windows kits\8.1\include\um\winsock2.h(1850): note: see declaration of 'inet_addr'
-\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(249): warning C4018: '<': signed/unsigned mismatch
+\\vmware-host\shared folders\jorgeomarmedratorres\documents\jomt\github\serverhp\serverhighperformance\server.cpp(293): warning C4018: '<': signed/unsigned mismatch
   ServerHighPerformance.vcxproj -> \\vmware-host\Shared Folders\jorgeomarmedratorres\Documents\JOMT\GitHub\ServerHP\Debug\ServerHighPerformance.exe
   ServerHighPerformance.vcxproj -> \\vmware-host\Shared Folders\jorgeomarmedratorres\Documents\JOMT\GitHub\ServerHP\Debug\ServerHighPerformance.pdb (Full PDB)
