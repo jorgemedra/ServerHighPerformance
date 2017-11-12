@@ -50,8 +50,8 @@ while Service is Running
 	end
 
 	while qClosed is not empty.
-		sc = Pop from qClosed.
-		% Close sc.
+		sc = qClosed.pop();
+		sc.close();
 	end
 end
 
